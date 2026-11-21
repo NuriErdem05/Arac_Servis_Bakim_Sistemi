@@ -1,61 +1,27 @@
-# =========================
-# SPRING BOOT / BACKEND
-# =========================
-
-# Maven derleme dosyalari
 **/target/
-
-# Gradle derleme dosyalari
 **/build/
 **/.gradle/
 
-# Yerel veritabani bilgileri ve sifreler
 /backend/src/main/resources/application-local.properties
 
-# Log dosyalari
 *.log
 
-# =========================
-# REACT / FRONTEND
-# =========================
-
-# Frontend simdilik GitHub'a yuklenmeyecek
-/frontend/
-
-# Node.js ve derleme dosyalari
 **/node_modules/
 **/dist/
 
-# Ortam degiskenleri
 **/.env
 **/.env.*
 !**/.env.example
-
-# =========================
-# INTELLIJ IDEA
-# =========================
 
 .idea/
 *.iml
 *.iws
 *.ipr
 
-# =========================
-# VS CODE
-# =========================
-
 .vscode/
-
-# =========================
-# ISLETIM SISTEMI
-# =========================
 
 .DS_Store
 Thumbs.db
-
-# =========================
-# GECICI DOSYALAR
-# =========================
 
 *.tmp
 *.bak

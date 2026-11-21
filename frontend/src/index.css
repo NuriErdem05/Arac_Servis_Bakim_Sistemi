@@ -1,0 +1,184 @@
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #222;
+  background: #f2f2f2;
+  font-synthesis: none;
+  --background: #f2f2f2;
+  --surface: #fff;
+  --ink: #222;
+  --muted: #666;
+  --line: #d9d9d9;
+  --danger: #a20c2b;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+a { color: inherit; text-decoration: none; }
+button, input, select { font: inherit; border-radius: 2px; }
+button, a { touch-action: manipulation; }
+button { cursor: pointer; }
+button:disabled, [aria-disabled="true"] { opacity: .55; }
+button:disabled { cursor: wait; }
+svg { vertical-align: middle; flex-shrink: 0; }
+:focus-visible { outline: 2px solid #333; outline-offset: 3px; }
+#main-content:focus, #page-title:focus { outline: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.skip-link { position: fixed; top: -80px; left: 16px; z-index: 100; padding: 12px 18px; background: white; border: 1px solid #333; }
+.skip-link:focus { top: 12px; }
+
+/* Ortak sayfa düzeni */
+.service-layout { display: flex; flex-direction: column; min-height: 100vh; }
+.service-header { background: white; border-bottom: 1px solid var(--line); }
+.service-header-inner { max-width: 1160px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 76px; }
+.service-brand { font-size: 22px; font-weight: 600; letter-spacing: -.5px; }
+.service-nav { display: flex; align-items: stretch; gap: 32px; align-self: stretch; }
+.service-nav a { display: flex; align-items: center; padding: 0 2px; color: #666; font-size: 14px; border-bottom: 3px solid transparent; }
+.service-nav a.active { color: #111; border-bottom-color: #333; font-weight: 600; }
+.service-nav a:hover { color: #111; }
+.main-content { flex: 1; width: 100%; max-width: 1160px; margin: 0 auto; padding: 42px 24px 60px; min-width: 0; }
+.page-content { width: 100%; }
+.page-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 28px; }
+h1 { font-size: 29px; line-height: 1.25; font-weight: 600; margin: 0; letter-spacing: -.6px; }
+.page-description { margin: 9px 0 0; color: #666; font-size: 14px; line-height: 1.6; }
+.service-footer { width: calc(100% - 48px); max-width: 1112px; margin: 0 auto; border-top: 1px solid var(--line); padding: 18px 0; color: #777; font-size: 12px; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 10px 17px; border: 1px solid #333; border-radius: 2px; font-size: 13px; font-weight: 500; line-height: 1.5; white-space: nowrap; }
+.button-primary { background: #292929; color: #fff; }
+.button-primary:hover { background: #444; }
+.button-secondary { background: white; border-color: #b8b8b8; color: #333; }
+.button-secondary:hover { background: #f5f5f5; }
+.button-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.back-link { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 25px; font-size: 13px; color: #555; padding: 3px 0; }
+.back-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.success-notice { display: flex; align-items: center; gap: 12px; background: white; border: 1px solid #bbb; padding: 13px 16px; margin-bottom: 24px; line-height: 1.6; font-size: 14px; }
+.success-notice button { display: inline-flex; align-items: center; margin-left: auto; background: none; border: 0; padding: 7px; color: #555; }
+
+/* Arama ve araç kayıtları */
+.collection-toolbar { display: grid; grid-template-columns: minmax(200px,1fr) 210px 240px; gap: 18px; padding: 22px 24px; background: white; border: 1px solid var(--line); }
+.collection-toolbar label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 9px; }
+.search-control { display: flex; align-items: center; gap: 9px; border: 1px solid #bdbdbd; background: white; padding: 0 12px; height: 42px; border-radius: 2px; }
+.search-control svg { color: #777; }
+.search-control input { width: 100%; min-width: 0; height: 100%; border: 0; background: transparent; font-size: 14px; outline: none; color: #222; }
+.search-control:focus-within { outline: 2px solid #333; outline-offset: 2px; }
+.filter-control { min-width: 0; }
+.filter-control select { width: 100%; height: 42px; border: 1px solid #bdbdbd; background: white; padding: 0 10px; color: #333; font-size: 13px; }
+.list-caption { display: flex; align-items: center; justify-content: space-between; gap: 15px; min-height: 63px; }
+.result-count { font-size: 13px; color: #666; margin: 0; }
+.text-button { border: 0; background: transparent; padding: 8px 0; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; color: #444; }
+.records-panel { border: 1px solid var(--line); background: white; }
+.records-heading, .vehicle-card { display: grid; grid-template-columns: 154px minmax(150px,1fr) 135px 132px 154px; align-items: center; gap: 18px; padding: 0 22px; }
+.records-heading { min-height: 43px; background: #e9e9e9; border-bottom: 1px solid var(--line); color: #555; font-size: 12px; font-weight: 600; }
+.vehicle-records { list-style: none; padding: 0; margin: 0; }
+.vehicle-records > li + li { border-top: 1px solid #e4e4e4; }
+.vehicle-card { min-height: 108px; padding-top: 22px; padding-bottom: 22px; min-width: 0; }
+.vehicle-card:hover { background: #fcfcfc; }
+.record-plate a { font-family: 'Courier New', monospace; font-weight: 700; font-size: 17px; letter-spacing: .3px; overflow-wrap: anywhere; }
+.record-plate a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.record-vehicle { min-width: 0; }
+.record-vehicle h2 { font-size: 15px; font-weight: 600; margin: 0 0 7px; line-height: 1.4; overflow-wrap: anywhere; }
+.record-vehicle p { margin: 0; font-size: 12px; color: #666; line-height: 1.5; overflow-wrap: anywhere; }
+.record-meta { display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.record-meta > span:last-child { color: #666; }
+.record-mileage { font-size: 12px; color: #666; white-space: nowrap; }
+.record-mileage strong { font-size: 15px; font-weight: 500; color: #222; font-variant-numeric: tabular-nums; }
+.record-mobile-label { display: none; }
+.card-actions { display: flex; gap: 8px; align-items: center; justify-content: flex-end; }
+.card-actions a { display: inline-flex; align-items: center; justify-content: center; border: 1px solid #bfbfbf; padding: 8px 11px; min-height: 36px; border-radius: 2px; font-size: 12px; }
+.card-actions a:hover { background: #f0f0f0; border-color: #888; }
+
+/* Ekleme ve düzenleme */
+.form-page { max-width: 900px; margin: 0 auto; }
+.form-layout { width: 100%; }
+.vehicle-form { padding: 28px 30px; border: 1px solid var(--line); background: white; }
+.form-section-heading { padding-bottom: 21px; margin-bottom: 26px; border-bottom: 1px solid #e4e4e4; }
+.form-section-heading h2 { font-size: 17px; font-weight: 600; margin: 0 0 8px; }
+.form-section-heading p { font-size: 13px; line-height: 1.6; color: #666; margin: 0; }
+.form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px 28px; border: 0; padding: 0; margin: 0; min-width: 0; }
+.form-field { display: flex; flex-direction: column; gap: 9px; min-width: 0; }
+.form-field label { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; }
+.required-mark { font-weight: 400; color: #666; }
+.optional { margin-left: auto; font-size: 11px; font-weight: 400; color: #777; }
+.form-field input, .form-field select { height: 44px; width: 100%; min-width: 0; border: 1px solid #bdbdbd; background: white; color: #222; font-size: 14px; padding: 10px 12px; }
+.form-field input::placeholder { color: #777; }
+.form-field [aria-invalid="true"] { border-color: var(--danger); }
+.form-field input:disabled, .form-field select:disabled { background: #f5f5f5; }
+.field-error { color: var(--danger); line-height: 1.6; font-size: 12px; }
+.field-hint { color: #666; line-height: 1.6; font-size: 12px; }
+.form-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; border-top: 1px solid #e4e4e4; padding-top: 24px; margin-top: 30px; }
+.required-note { font-size: 12px; color: #666; }
+.form-error { display: flex; align-items: start; gap: 10px; padding: 14px; margin-bottom: 24px; background: #fff4f5; border: 1px solid #e6c9ce; color: var(--danger); font-size: 13px; line-height: 1.7; }
+
+/* Araç detayı */
+.detail-hero { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding: 27px 30px; border: 1px solid var(--line); background: white; margin-bottom: 24px; }
+.detail-plate { font-family: 'Courier New', monospace; font-weight: 700; font-size: 24px; letter-spacing: .5px; }
+.vehicle-identification h2 { font-size: 18px; margin: 14px 0 7px; font-weight: 500; }
+.vehicle-identification p { color: #666; font-size: 13px; margin: 0; }
+.mileage-panel { padding-left: 32px; border-left: 1px solid var(--line); min-width: 200px; }
+.mileage-panel > span { font-size: 12px; color: #666; display: block; margin-bottom: 12px; }
+.mileage-panel strong { display: block; font-size: 25px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.mileage-panel small { font-size: 13px; font-weight: 400; color: #666; }
+.detail-panel { background: white; border: 1px solid var(--line); padding: 28px 30px; }
+.detail-panel > h2 { font-size: 17px; font-weight: 600; margin: 0 0 20px; }
+.detail-specs { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 48px; margin: 0; }
+.detail-specs > div { display: grid; grid-template-columns: 120px minmax(0,1fr); align-items: start; padding: 17px 0; border-top: 1px solid #e7e7e7; gap: 14px; }
+.detail-specs dt { color: #666; font-size: 13px; line-height: 1.7; }
+.detail-specs dd { font-size: 14px; margin: 0; line-height: 1.6; overflow-wrap: anywhere; }
+
+/* Durumlar ve telefon görünümü */
+.state-panel, .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 15px; min-height: 250px; padding: 36px 22px; background: white; border: 1px solid var(--line); color: #666; font-size: 14px; }
+.state-panel h2, .empty-state h2 { color: #333; margin: 0; font-weight: 500; font-size: 20px; }
+.state-panel p, .empty-state p { line-height: 1.8; margin: 0 0 5px; max-width: 440px; }
+.spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+@media (max-width: 960px) {
+  .records-heading, .vehicle-card { grid-template-columns: 130px minmax(130px,1fr) 110px 110px 140px; gap: 12px; padding-left: 18px; padding-right: 18px; }
+  .collection-toolbar { grid-template-columns: minmax(160px,1fr) 170px 210px; gap: 14px; padding: 20px; }
+}
+@media (max-width: 800px) {
+  .records-heading { display: none; }
+  .vehicle-card { grid-template-columns: 1fr 1fr; gap: 18px; padding: 22px; align-items: start; }
+  .record-vehicle { grid-column: 1 / -1; grid-row: 2; }
+  .record-vehicle h2 { font-size: 17px; }
+  .record-mobile-label { display: block; font-size: 11px; color: #777; margin-bottom: 8px; font-weight: 400; }
+  .record-meta { gap: 0; }
+  .record-meta > span:not(.record-mobile-label) { display: inline; margin-bottom: 5px; }
+  .card-actions { grid-column: 2; grid-row: 1; }
+  .record-mileage { align-self: start; }
+  .record-plate a { font-size: 18px; }
+  .collection-toolbar { grid-template-columns: 1fr 1fr; }
+  .search-field { grid-column: 1 / -1; }
+  .detail-specs { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .service-header-inner { padding: 20px 20px 0; flex-wrap: wrap; gap: 12px; }
+  .service-brand { font-size: 21px; }
+  .service-nav { width: 100%; gap: 28px; }
+  .service-nav a { padding: 12px 0; font-size: 13px; }
+  .main-content { padding: 27px 18px 40px; }
+  h1 { font-size: 25px; }
+  .page-heading { align-items: start; gap: 15px; flex-wrap: wrap; margin-bottom: 23px; }
+  .page-description { font-size: 13px; }
+  .page-heading > .button { min-height: 38px; padding: 9px 13px; }
+  .collection-toolbar { padding: 18px; gap: 18px 12px; }
+  .filter-control label { font-size: 12px; }
+  .filter-control select { font-size: 12px; }
+  .search-control input { font-size: 16px; }
+  .vehicle-card { padding: 21px 18px; gap: 19px 12px; }
+  .card-actions { gap: 6px; }
+  .card-actions a { padding: 8px; min-height: 36px; font-size: 11px; }
+  .record-plate a { font-size: 16px; }
+  .record-meta, .record-mileage { font-size: 13px; }
+  .service-footer { width: calc(100% - 36px); font-size: 11px; }
+  .vehicle-form { padding: 24px 20px; }
+  .form-grid { grid-template-columns: minmax(0,1fr); gap: 23px; }
+  .form-field input, .form-field select { font-size: 16px; }
+  .form-footer { align-items: start; }
+  .required-note { width: 100%; font-size: 11px; }
+  .form-footer > .button-row { width: 100%; }
+  .form-footer .button-primary { flex: 1; }
+  .detail-hero { padding: 24px 22px; display: block; }
+  .mileage-panel { border-left: 0; padding: 21px 0 0; margin-top: 23px; border-top: 1px solid var(--line); }
+  .mileage-panel > span { margin-bottom: 8px; }
+  .mileage-panel strong { font-size: 23px; }
+  .detail-panel { padding: 25px 22px; }
+  .detail-specs > div { grid-template-columns: 105px minmax(0,1fr); }
+}
