@@ -61,8 +61,32 @@ public class VehicleService {
     }
 
     @Transactional(readOnly = true)
+    public List<VehicleResponse> getServiceVehicles() {
+        return vehicleRepository.findAllByArchivedFalseOrderByIdDesc()
+                .stream().map(this::toResponse).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public VehicleResponse getServiceVehicle(Long id) {
+        requirePositiveVehicleId(id);
+        Vehicle vehicle = vehicleRepository.findByIdAndArchivedFalse(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Aktif araç bulunamadı."));
+        return toResponse(vehicle);
+    }
+
+    @Transactional
+    public VehicleResponse updateServiceVehicle(Long id, UpdateVehicleRequest request) {
+        requirePositiveVehicleId(id);
+        Vehicle vehicle = vehicleRepository.findActiveByIdForUpdate(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Aktif araç bulunamadı."));
+        return applyUpdate(vehicle, request);
+    }
+
+    @Transactional(readOnly = true)
     public List<VehicleResponse> getVehiclesByOwner(Long ownerId){
-        if (ownerId <= 0){
+        if (ownerId == null || ownerId <= 0){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Araç sahibi kimliği pozitif olmalıdır.");
         }
 
@@ -85,12 +109,16 @@ public class VehicleService {
 
     @Transactional
     public VehicleResponse updateVehicle(Long id, Long ownerId, UpdateVehicleRequest request){
-        Vehicle vehicle = findActiveVehicle(id, ownerId);
+        Vehicle vehicle = findActiveVehicleForUpdate(id, ownerId);
+        return applyUpdate(vehicle, request);
+    }
+
+    private VehicleResponse applyUpdate(Vehicle vehicle, UpdateVehicleRequest request) {
         String normalizedPlate = request.plate()
                 .replace(" ", "")
                 .toUpperCase(Locale.ROOT);
 
-        if (vehicleRepository.existsByPlateAndIdNot(normalizedPlate, id)){
+        if (vehicleRepository.existsByPlateAndIdNot(normalizedPlate, vehicle.getId())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Bu plaka başka bir araçta kayıtlı.");
         }
 
@@ -119,7 +147,7 @@ public class VehicleService {
     }
 
     private Vehicle findActiveVehicle(Long id, Long ownerId){
-        if (id <= 0 ||ownerId <= 0){
+        if (id == null || ownerId == null || id <= 0 || ownerId <= 0){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Araç ve kullanıcı kimlikleri pozitif olmalıdır.");
         }
 
@@ -128,6 +156,24 @@ public class VehicleService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bu kullanıcıya ait aktif araç bulunamadı."));
     }
 
+
+    private Vehicle findActiveVehicleForUpdate(Long id, Long ownerId) {
+        if (id == null || ownerId == null || id <= 0 || ownerId <= 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Araç ve kullanıcı kimlikleri pozitif olmalıdır.");
+        }
+        return vehicleRepository.findActiveByIdForUpdate(id)
+                .filter(vehicle -> vehicle.getOwner().getId().equals(ownerId))
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Bu kullanıcıya ait aktif araç bulunamadı."));
+    }
+
+    private void requirePositiveVehicleId(Long id) {
+        if (id == null || id <= 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Araç kimliği pozitif olmalıdır.");
+        }
+    }
 
     private VehicleResponse toResponse(Vehicle vehicle){
         return new VehicleResponse(

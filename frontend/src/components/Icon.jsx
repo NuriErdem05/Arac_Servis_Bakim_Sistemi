@@ -1,6 +1,10 @@
 const paths = {
   car: <><path d="m5 10 1.5-4h11L19 10M3 10h18v8H3zM6 18v2m12-2v2M6 13h2m8 0h2" /><path d="M4 7H2m20 0h-2" /></>,
   grid: <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>,
+  calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4m10-4v4M3 11h18m-14 4h2m4 0h2" /></>,
+  clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
+  users: <><circle cx="9" cy="8" r="3" /><path d="M3 21v-2a6 6 0 0 1 12 0v2m2-16a3 3 0 0 1 0 6m1 4a5 5 0 0 1 3 4v2" /></>,
+  refresh: <><path d="M20 7v5h-5M4 17v-5h5" /><path d="M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1" /></>,
   plus: <path d="M12 5v14M5 12h14" />,
   arrow: <path d="M5 12h14m-6-6 6 6-6 6" />,
   back: <path d="M19 12H5m6-6-6 6 6 6" />,

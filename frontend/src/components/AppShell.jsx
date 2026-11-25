@@ -1,5 +1,12 @@
+import Icon from './Icon';
+
 export default function AppShell({ page, children }) {
-  const isCreate = page === 'create';
+  const links = [
+    ['/dashboard', 'Genel bakış', ['dashboard']],
+    ['/vehicles', 'Araçlarım', ['list', 'detail', 'edit']],
+    ['/vehicles/new', 'Araç ekle', ['create']],
+    ['/appointments', 'Randevular', ['appointments', 'appointment-create', 'appointment-detail']],
+  ];
   return (
     <div className="service-layout">
       <a className="skip-link" href="#main-content" onClick={(event) => {
@@ -8,15 +15,17 @@ export default function AppShell({ page, children }) {
       }}>İçeriğe geç</a>
       <header className="service-header">
         <div className="service-header-inner">
-          <a className="service-brand" href="#/vehicles" aria-label="Araç Servis ana sayfa">Araç Servis</a>
+          <a className="service-brand" href="#/dashboard" aria-label="Araç Servis ana sayfa">
+            <span className="brand-mark"><Icon name="car" size={24} /></span>
+            <span className="brand-copy"><strong>Araç Servis ve Bakım Yönetim Sistemi</strong></span>
+          </a>
           <nav className="service-nav" aria-label="Ana menü">
-            <a href="#/vehicles" className={!isCreate ? 'active' : ''} aria-current={!isCreate ? 'page' : undefined}>Araçlarım</a>
-            <a href="#/vehicles/new" className={isCreate ? 'active' : ''} aria-current={isCreate ? 'page' : undefined}>Araç ekle</a>
+            {links.map(([path, label, pages]) => <a key={path} href={'#' + path} className={pages.includes(page) ? 'active' : ''} aria-current={pages.includes(page) ? 'page' : undefined}>{label}</a>)}
           </nav>
         </div>
       </header>
       <main id="main-content" className="main-content" tabIndex={-1}>{children}</main>
-      <footer className="service-footer">Araç Servis ve Bakım Yönetimi</footer>
+      <footer className="service-footer">Araç Servis ve Bakım Yönetim Sistemi</footer>
     </div>
   );
 }

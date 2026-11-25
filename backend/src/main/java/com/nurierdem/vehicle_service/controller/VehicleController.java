@@ -31,6 +31,23 @@ public class VehicleController {
         return vehicleService.getVehiclesByOwner(ownerId);
     }
 
+    @GetMapping("/service")
+    public List<VehicleResponse> getServiceVehicles() {
+        return vehicleService.getServiceVehicles();
+    }
+
+    @GetMapping("/service/{id}")
+    public VehicleResponse getServiceVehicle(@PathVariable("id") Long id) {
+        return vehicleService.getServiceVehicle(id);
+    }
+
+    @PutMapping("/service/{id}")
+    public VehicleResponse updateServiceVehicle(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody UpdateVehicleRequest request) {
+        return vehicleService.updateServiceVehicle(id, request);
+    }
+
     @GetMapping("/{id}")
     public VehicleResponse getVehicleById(@PathVariable("id") Long id, @RequestParam("ownerId") Long ownerId){
         return vehicleService.getVehicleById(id, ownerId);

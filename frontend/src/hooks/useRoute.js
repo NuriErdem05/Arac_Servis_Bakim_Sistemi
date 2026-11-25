@@ -1,15 +1,24 @@
 import { useEffect, useState } from 'react';
 
 function currentPath() {
-  return window.location.hash.slice(1).replace(/\/$/, '') || '/vehicles';
+  return window.location.hash.slice(1) || '/dashboard';
 }
 
 export function parseRoute(path) {
-  if (path === '/vehicles') return { page: 'list', path };
-  if (path === '/vehicles/new') return { page: 'create', path };
-  const match = path.match(/^\/vehicles\/(\d+)(\/edit)?$/);
-  if (match) return { page: match[2] ? 'edit' : 'detail', id: match[1], path };
-  return { page: 'not-found', path };
+  const [pathname, query = ''] = path.split('?');
+  const clean = pathname.replace(/\/$/, '') || '/dashboard';
+  const base = { path, query: new URLSearchParams(query) };
+  const pages = {
+    '/dashboard': 'dashboard', '/admin': 'dashboard', '/overview': 'dashboard',
+    '/vehicles': 'list', '/vehicles/new': 'create',
+    '/appointments': 'appointments', '/appointments/new': 'appointment-create',
+  };
+  if (pages[clean]) return { ...base, page: pages[clean] };
+  const vehicle = clean.match(/^\/vehicles\/([1-9]\d*)(?:\/(edit))?$/);
+  if (vehicle) return { ...base, page: vehicle[2] === 'edit' ? 'edit' : 'detail', id: vehicle[1] };
+  const appointment = clean.match(/^\/appointments\/([1-9]\d*)$/);
+  if (appointment) return { ...base, page: 'appointment-detail', id: appointment[1] };
+  return { ...base, page: 'not-found' };
 }
 
 export function useRoute() {

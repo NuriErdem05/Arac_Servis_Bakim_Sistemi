@@ -65,6 +65,11 @@ public class AppointmentController {
         return appointmentService.getServiceAppointments(status);
     }
 
+    @GetMapping("/service/{id}")
+    public AppointmentResponse getServiceAppointment(@PathVariable("id") Long id) {
+        return appointmentService.getServiceAppointment(id);
+    }
+
     @GetMapping("/{id}")
     public AppointmentResponse getOwnerAppointment(
             @PathVariable("id") Long id,

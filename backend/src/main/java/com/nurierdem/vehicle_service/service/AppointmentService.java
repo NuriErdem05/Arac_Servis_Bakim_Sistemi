@@ -152,6 +152,11 @@ public class AppointmentService {
     }
 
     @Transactional(readOnly = true)
+    public AppointmentResponse getServiceAppointment(Long id) {
+        return toResponse(findAppointment(id));
+    }
+
+    @Transactional(readOnly = true)
     public AppointmentResponse getOwnerAppointment(
             Long id,
             Long ownerId
