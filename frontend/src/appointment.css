@@ -1,27 +1,30 @@
-/* Ortak görünüm ve randevu modülü. Veri/araç işlemleri mevcut servislerde kalır. */
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   color: #222;
-  background: #f6f6f5;
-  --background: #f6f6f5;
+  --background: #f4f5f6;
+  background: var(--background);
   --surface: #fff;
-  --line: #e5e5e3;
+  --line: #dedfe1;
   --muted: #727271;
+  --header-surface: #181d25;
+  --header-active: #2a323e;
+  --header-accent: #91b4d4;
 }
 body { line-height: 1.5; }
 button, input, select, textarea { font: inherit; }
 button, .button, .service-nav a, .quick-links a { transition: background-color .15s, border-color .15s, box-shadow .15s; }
-.service-header { background: #fff; border-bottom: 1px solid var(--line); }
+.service-header { background: var(--header-surface); color: #fff; border-bottom: 1px solid var(--line); }
+.service-header a:focus-visible { outline-color: var(--header-accent); }
 .service-header-inner { max-width: 1180px; min-height: 88px; gap: 30px; }
 .service-brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; white-space: nowrap; letter-spacing: -.5px; }
-.brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: #252525; color: white; border-radius: 12px; }
+.brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: #303a47; color: white; border-radius: 12px; }
 .brand-copy { display: flex; flex-direction: column; gap: 4px; }
 .brand-copy strong { font-size: 21px; font-weight: 650; line-height: 1.15; }
-.brand-copy small { color: #74746d; font-size: 10px; font-weight: 400; letter-spacing: .15px; }
+.brand-copy small { color: #c4ccd6; font-size: 10px; font-weight: 400; letter-spacing: .15px; }
 .service-nav { display: flex; gap: 5px; align-items: center; align-self: center; min-width: 0; }
-.service-nav a { min-height: 40px; padding: 10px 15px; border: 0; border-radius: 8px; font-size: 13px; color: #737370; white-space: nowrap; }
-.service-nav a:hover { background: #f4f4f3; color: #222; }
-.service-nav a.active { color: #fff; background: #272727; border: 0; font-weight: 550; }
+.service-nav a { min-height: 40px; padding: 10px 15px; border: 0; border-radius: 8px; font-size: 13px; color: #d6dce3; white-space: nowrap; }
+.service-nav a:hover { background: var(--header-active); color: #fff; }
+.service-nav a.active { color: #fff; background: var(--header-active); border: 0; box-shadow: inset 0 -3px var(--header-accent); font-weight: 550; }
 .main-content { max-width: 1180px; padding: 42px 24px 64px; }
 h1 { font-size: 32px; font-weight: 650; letter-spacing: -1px; line-height: 1.25; }
 .page-heading { margin-bottom: 30px; align-items: center; }
@@ -45,6 +48,10 @@ h1 { font-size: 32px; font-weight: 650; letter-spacing: -1px; line-height: 1.25;
 .quick-links a { display: flex; align-items: center; gap: 15px; min-width: 0; padding: 20px; background: white; border: 1px solid var(--line); border-radius: 12px; }
 .quick-links a:hover { border-color: #c8c8c1; box-shadow: 0 4px 14px #20202006; }
 .quick-link-icon { display: inline-flex; align-items: center; justify-content: center; width: 43px; height: 43px; background: #f3f3f0; border-radius: 10px; color: #55554e; flex-shrink: 0; }
+.quick-links a[href="#/appointments/new"] .quick-link-icon {
+  background: #edf2f6;
+  color: #526d82;
+}
 .quick-link-copy { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
 .quick-link-copy strong { font-size: 13px; font-weight: 600; }
 .quick-link-copy small { font-size: 11px; color: #74746b; line-height: 1.6; }
@@ -71,7 +78,8 @@ h1 { font-size: 32px; font-weight: 650; letter-spacing: -1px; line-height: 1.25;
 .description-cell { min-width: 150px; max-width: 270px; color: #74746a; overflow-wrap: anywhere; white-space: pre-wrap; }
 .appointment-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border: 1px solid #e4e4dc; border-radius: 6px; font-size: 10px; font-weight: 500; line-height: 1.6; white-space: nowrap; background: #f7f7f2; color: #64645b; }
 .appointment-status::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
-.status-confirmed { background: #ededeb; color: #53534b; border-color: #deded7; }
+.status-pending { background: #fff2d9; color: #704400; border-color: #eddfc3; }
+.status-confirmed { background: #e6f2ec; color: #275a44; border-color: #ccdcd2; }
 .status-completed { background: #33332f; color: white; border-color: #33332f; }
 .status-cancelled { background: #fafafa; color: #737369; border-color: #e5e5df; }
 .collection-toolbar { border-radius: 12px; border-color: var(--line); padding: 22px; gap: 20px; box-shadow: 0 3px 8px #20202002; }
@@ -147,6 +155,6 @@ h1 { font-size: 32px; font-weight: 650; letter-spacing: -1px; line-height: 1.25;
   .service-header-inner { padding: 18px 20px 16px; gap: 20px; }
   .brand-mark { width: 40px; height: 40px; border-radius: 10px; }
   .brand-copy strong { font-size: 20px; }
-  .service-nav { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); background: #f4f4f1; padding: 4px; border-radius: 10px; gap: 4px; }
+  .service-nav { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); padding: 4px; border-radius: 10px; gap: 4px; }
   .service-nav a { justify-content: center; font-size: 12px; min-height: 38px; padding: 9px 12px; border-radius: 7px; }
 }
