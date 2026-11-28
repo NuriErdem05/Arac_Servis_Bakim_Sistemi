@@ -2,6 +2,7 @@ import { useVehicles } from '../hooks/useVehicles';
 import { formatNumber, fuelLabel } from '../utils/vehicle';
 import AsyncState from '../components/AsyncState';
 import Icon from '../components/Icon';
+import MaintenancePlanPanel from '../components/MaintenancePlanPanel';
 
 export default function VehicleDetailPage({ id, scope = 'owner' }) {
   const service = scope === 'service';
@@ -32,6 +33,7 @@ export default function VehicleDetailPage({ id, scope = 'owner' }) {
             ['Motor bilgisi', vehicle.engineInfo || 'Belirtilmedi'],
           ].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
         </section>
+        <MaintenancePlanPanel key={scope} vehicleId={id} scope={scope} />
         <div className="quick-links vehicle-quick-links" aria-label="Araç işlemleri"><a href={'#' + basePath + '/' + id + '/history'}><span className="quick-link-icon"><Icon name="clock" size={21} /></span><span className="quick-link-copy"><strong>Bakım ve onarım geçmişi</strong><small>Araca ait geçmiş servis kayıtlarını görüntüleyin.</small></span><Icon name="arrow" size={18} /></a><a href={service ? '#/service-records/new?vehicleId=' + id : '#/appointments/new?vehicleId=' + id}><span className="quick-link-icon"><Icon name="plus" size={21} /></span><span className="quick-link-copy"><strong>{service ? 'Servis kaydı oluştur' : 'Randevu oluştur'}</strong><small>{service ? 'Yapılan bakım veya onarım işlemini kaydedin.' : 'Araç için yeni bir servis randevusu oluşturun.'}</small></span><Icon name="arrow" size={18} /></a></div>
       </>}
     </section>
