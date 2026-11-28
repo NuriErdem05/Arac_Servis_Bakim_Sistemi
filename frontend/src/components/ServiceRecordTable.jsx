@@ -1,0 +1,6 @@
+import { formatDate, formatMoney, SERVICE_LABELS } from '../utils/service';
+import { formatNumber } from '../utils/vehicle';
+
+export default function ServiceRecordTable({ rows, vehicleBasePath = '/service/vehicles' }) {
+  return <div className="table-scroll" role="region" aria-label="Servis kayıtları" tabIndex={0}><table className="data-table service-record-table"><caption className="sr-only">Bakım ve onarım kayıtları</caption><thead><tr><th scope="col">Tarih</th><th scope="col">Plaka</th><th scope="col">İşlem</th><th scope="col">Kilometre</th><th scope="col">Personel</th><th scope="col">Maliyet</th><th scope="col">Detay</th></tr></thead><tbody>{rows.map((item) => <tr key={item.id}><td><time dateTime={item.serviceDate}>{formatDate(item.serviceDate)}</time></td><th scope="row"><a className="table-link plate-text" href={'#' + vehicleBasePath + '/' + item.vehicleId}>{item.plate}</a></th><td>{SERVICE_LABELS[item.serviceType] || item.serviceType}</td><td>{formatNumber(item.mileage)} km</td><td>{item.performedByName || 'Belirtilmedi'}</td><td className="amount-cell">{formatMoney(item.cost)}</td><td><a className="table-link" href={'#/service-records/' + item.id} aria-label={`${item.plate} servis kaydını aç`}>Görüntüle</a></td></tr>)}</tbody></table></div>;
+}

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-export default function EntryForm({ initialValues, fields, validate, onSave, cancelHref, submitLabel = 'Kaydet', children }) {
+export default function EntryForm({ initialValues, fields, validate, onSave, onValuesChange, cancelHref, submitLabel = 'Kaydet', children }) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
@@ -29,7 +29,10 @@ export default function EntryForm({ initialValues, fields, validate, onSave, can
   }
   function change(event) {
     const { name, value } = event.target;
-    setValues((old) => ({ ...old, [name]: value }));
+    setValues((old) => {
+      const next = { ...old, [name]: value };
+      return onValuesChange ? onValuesChange(next, name) : next;
+    });
     setErrors((old) => ({ ...old, [name]: '' }));
   }
   return <form className="vehicle-form" onSubmit={submit} noValidate>

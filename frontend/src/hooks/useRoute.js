@@ -7,17 +7,22 @@ function currentPath() {
 export function parseRoute(path) {
   const [pathname, query = ''] = path.split('?');
   const clean = pathname.replace(/\/$/, '') || '/dashboard';
-  const base = { path, query: new URLSearchParams(query) };
+  const base = { path, query: new URLSearchParams(query), scope: clean.startsWith('/service/vehicles') ? 'service' : 'owner' };
   const pages = {
     '/dashboard': 'dashboard', '/admin': 'dashboard', '/overview': 'dashboard',
     '/vehicles': 'list', '/vehicles/new': 'create',
     '/appointments': 'appointments', '/appointments/new': 'appointment-create',
+    '/service/vehicles': 'list',
+    '/service-records': 'records', '/service-records/new': 'record-create',
+    '/reports': 'reports',
   };
   if (pages[clean]) return { ...base, page: pages[clean] };
-  const vehicle = clean.match(/^\/vehicles\/([1-9]\d*)(?:\/(edit))?$/);
-  if (vehicle) return { ...base, page: vehicle[2] === 'edit' ? 'edit' : 'detail', id: vehicle[1] };
+  const vehicle = clean.match(/^\/(?:service\/)?vehicles\/([1-9]\d*)(?:\/(edit|history))?$/);
+  if (vehicle) return { ...base, page: vehicle[2] === 'edit' ? 'edit' : vehicle[2] === 'history' ? 'history' : 'detail', id: vehicle[1] };
   const appointment = clean.match(/^\/appointments\/([1-9]\d*)$/);
   if (appointment) return { ...base, page: 'appointment-detail', id: appointment[1] };
+  const record = clean.match(/^\/service-records\/([1-9]\d*)$/);
+  if (record) return { ...base, page: 'record-detail', id: record[1] };
   return { ...base, page: 'not-found' };
 }
 

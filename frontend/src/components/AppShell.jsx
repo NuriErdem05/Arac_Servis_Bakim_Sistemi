@@ -3,9 +3,11 @@ import Icon from './Icon';
 export default function AppShell({ page, children }) {
   const links = [
     ['/dashboard', 'Genel bakış', ['dashboard']],
-    ['/vehicles', 'Araçlarım', ['list', 'detail', 'edit']],
+    ['/vehicles', 'Araçlar', ['list', 'detail', 'edit', 'history']],
     ['/vehicles/new', 'Araç ekle', ['create']],
     ['/appointments', 'Randevular', ['appointments', 'appointment-create', 'appointment-detail']],
+    ['/service-records', 'Servis kayıtları', ['records', 'record-create', 'record-detail']],
+    ['/reports', 'Servis özetleri', ['reports']],
   ];
   return (
     <div className="service-layout">

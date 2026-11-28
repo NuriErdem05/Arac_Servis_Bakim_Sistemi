@@ -25,9 +25,10 @@ export default function AdminHomePage() {
     <PageHeading title="Genel bakış" eyebrow="Servis özeti" description="Servis genelindeki araçlar ve randevu akışı."><button className="button button-secondary" type="button" onClick={retry} disabled={loading}><Icon name="refresh" size={16} />{loading ? 'Yükleniyor…' : 'Yenile'}</button></PageHeading>
     {loading || error ? <AsyncState loading={loading} error={error} retry={retry} /> : data && <>
       <dl className="overview-summary">{[['Aktif araç', data.vehicles.length, 'car'], ['Bugünkü aktif randevu', today.length, 'calendar'], ['Onay bekleyen', active.filter((item) => item.status === 'PENDING').length, 'clock'], ['Personel atanmamış', unassigned.length, 'users']].map(([label, count, icon]) => <div key={label}><dt><span>{label}</span><Icon name={icon} size={18} /></dt><dd>{count}</dd></div>)}</dl>
-      <div className="quick-links" aria-label="Hızlı işlemler">
+      <div className="quick-links quick-links-home" aria-label="Hızlı işlemler">
         <a href="#/appointments"><span className="quick-link-icon"><Icon name="calendar" size={22} /></span><span className="quick-link-copy"><strong>Randevuları görüntüle</strong><small>Talepleri, durumları ve personel atamalarını takip edin.</small></span><Icon name="arrow" size={18} /></a>
         <a href="#/appointments/new"><span className="quick-link-icon"><Icon name="plus" size={22} /></span><span className="quick-link-copy"><strong>Randevu oluştur</strong><small>Araç için uygun tarih ve servis talebini belirleyin.</small></span><Icon name="arrow" size={18} /></a>
+        <a href="#/service-records/new"><span className="quick-link-icon"><Icon name="check" size={22} /></span><span className="quick-link-copy"><strong>Servis kaydı oluştur</strong><small>Tamamlanan bakım veya onarımı kaydedin.</small></span><Icon name="arrow" size={18} /></a>
       </div>
       <div className="overview-heading"><h2>Randevu akışı</h2><span>{now.toLocaleDateString('tr-TR', { dateStyle: 'long' })}</span></div>
       <div className="overview-filters" role="group" aria-label="Randevu görünümü">{Object.entries(views).map(([key, label]) => <button key={key} type="button" aria-pressed={view === key} onClick={() => setView(key)}>{label}</button>)}</div>

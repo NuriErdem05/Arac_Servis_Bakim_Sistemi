@@ -1,0 +1,40 @@
+/* Servis kayıtları, araç geçmişi ve dönem özetleri. */
+.service-brand { min-width: 0; flex-shrink: 1; }
+.brand-copy { min-width: 0; }
+.brand-copy strong { white-space: normal; line-height: 1.3; }
+.service-header-inner { flex-wrap: wrap; row-gap: 14px; padding-top: 18px; padding-bottom: 18px; }
+.service-nav { flex-wrap: wrap; }
+.page-heading { flex-wrap: wrap; }
+.quick-links-home { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.quick-links-home a { padding: 18px; gap: 12px; }
+.vehicle-quick-links { margin-top: 22px; }
+.toolbar-two { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+.overview-summary .summary-value { font-size: 23px; letter-spacing: -.5px; overflow-wrap: anywhere; }
+.service-record-table { min-width: 900px; }
+.amount-cell { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.preserve-lines { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.9; color: #66665c; }
+.detail-panel h3 { font-size: 13px; font-weight: 600; margin-top: 25px; }
+.section-actions { margin: 22px 0; }
+.section-actions + .detail-panel { margin-top: 20px; }
+.report-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; margin: 24px 0; }
+.report-grid > .detail-panel { margin: 0; min-width: 0; }
+.report-list { margin: 0; font-size: 12px; }
+.report-list > div { display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid #eeeee8; padding: 16px 0; }
+.report-list dt { color: #74746b; }
+.report-list dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; color: #53534a; }
+@media (max-width: 1100px) {
+  .service-header-inner { align-items: start; }
+  .service-nav { width: 100%; }
+  .quick-links-home { grid-template-columns: 1fr; }
+}
+@media (max-width: 650px) {
+  .toolbar-two, .report-grid { grid-template-columns: 1fr; }
+  .overview-summary .summary-value { font-size: 21px; }
+  .quick-links-home { gap: 12px; }
+  .report-grid { gap: 16px; }
+}
+@media (max-width: 560px) {
+  .brand-copy strong { font-size: 17px; }
+  .service-header-inner { padding-top: 18px; padding-bottom: 16px; }
+  .service-nav { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+}

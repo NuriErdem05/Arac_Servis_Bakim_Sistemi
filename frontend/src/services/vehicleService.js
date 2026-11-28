@@ -43,3 +43,21 @@ export function updateVehicle(id, vehicle) {
     body: vehicle,
   });
 }
+
+export async function getServiceVehicles(signal) {
+  const data = await apiRequest('/vehicles/service', { signal });
+  if (!Array.isArray(data)) throw new Error('Servis araçları beklenen biçimde alınamadı.');
+  return data;
+}
+
+export async function getServiceVehicle(id, signal) {
+  vehiclePath(id);
+  const data = await apiRequest(`/vehicles/service/${Number(id)}`, { signal });
+  if (!data || typeof data !== 'object' || data.id == null) throw new Error('Araç bilgileri beklenen biçimde alınamadı.');
+  return data;
+}
+
+export function updateServiceVehicle(id, vehicle) {
+  vehiclePath(id);
+  return apiRequest(`/vehicles/service/${Number(id)}`, { method: 'PUT', body: vehicle });
+}
