@@ -8,6 +8,29 @@
 .quick-links-home { grid-template-columns: repeat(3,minmax(0,1fr)); }
 .quick-links-home a { padding: 18px; gap: 12px; }
 .vehicle-quick-links { margin-top: 22px; }
+.maintenance-plan .section-heading { flex-wrap: wrap; gap: 8px 16px; }
+.maintenance-plan .detail-specs dd small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+}
+.maintenance-status {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #eef1f4;
+  color: #41596e;
+  font-size: 12px;
+  font-weight: 550;
+}
+.maintenance-status[data-status="APPROACHING"],
+.maintenance-status[data-status="DUE"] {
+  background: #fff2d9;
+  color: #704400;
+}
+.maintenance-status[data-status="OVERDUE"] {
+  background: var(--status-incomplete-surface);
+  color: var(--status-incomplete-text);
+}
 .toolbar-two { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
 .overview-summary .summary-value { font-size: 23px; letter-spacing: -.5px; overflow-wrap: anywhere; }
 .service-record-table { min-width: 900px; }
@@ -38,3 +61,28 @@
   .service-header-inner { padding-top: 18px; padding-bottom: 16px; }
   .service-nav { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
+
+.account-create-form { padding: clamp(20px, 4vw, 30px); }
+.account-create-form .section-actions { margin-bottom: 0; }
+.account-error {
+  margin: 0 0 18px;
+  padding: 13px 16px;
+  border: 1px solid #e1bdb9;
+  border-radius: 8px;
+  background: #f9ebea;
+  color: #7d2520;
+  font-size: 14px;
+}
+.temporary-password-panel { margin-bottom: 20px; }
+.temporary-password-panel p { margin: 0 0 12px; overflow-wrap: anywhere; }
+.temporary-password-panel .form-field { max-width: 400px; margin-bottom: 16px; }
+.temporary-password-panel input { font-family: ui-monospace, monospace; }
+.temporary-password-panel [role="status"] { margin: 12px 0 0; }
+.account-actions { gap: 6px; }
+.account-no-action { color: #686c71; }
+.account-delete-button {
+  border-color: #e3bcbc;
+  background: #fff;
+  color: #8f2127;
+}
+.account-delete-button:not(:disabled):hover { background: #f9eaea; }

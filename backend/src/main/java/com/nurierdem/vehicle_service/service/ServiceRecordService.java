@@ -3,6 +3,7 @@ package com.nurierdem.vehicle_service.service;
 import com.nurierdem.vehicle_service.dto.CreateServiceRecordRequest;
 import com.nurierdem.vehicle_service.dto.ServiceRecordResponse;
 import com.nurierdem.vehicle_service.entity.*;
+import com.nurierdem.vehicle_service.enums.UserRole;
 import com.nurierdem.vehicle_service.enums.AppointmentStatus;
 import com.nurierdem.vehicle_service.repository.*;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -50,6 +51,9 @@ public class ServiceRecordService {
             CreateServiceRecordRequest request, boolean requireAssignment) {
         requirePositiveId(request.vehicleId());
         User staff = findUser(request.performedById());
+        if (staff.getRole() != UserRole.STAFF) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "İşlem için personel hesabı seçin.");
+        }
         appointmentRepository.lockSchedule();
 
         Vehicle vehicle = vehicleRepository.findActiveByIdForUpdate(request.vehicleId())

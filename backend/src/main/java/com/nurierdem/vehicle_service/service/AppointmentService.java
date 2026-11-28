@@ -4,6 +4,7 @@ import com.nurierdem.vehicle_service.dto.*;
 import com.nurierdem.vehicle_service.entity.Appointment;
 import com.nurierdem.vehicle_service.entity.User;
 import com.nurierdem.vehicle_service.entity.Vehicle;
+import com.nurierdem.vehicle_service.enums.UserRole;
 import com.nurierdem.vehicle_service.enums.AppointmentStatus;
 import com.nurierdem.vehicle_service.repository.*;
 import org.springframework.http.HttpStatus;
@@ -192,6 +193,9 @@ public class AppointmentService {
         }
 
         User staff = findUser(request.staffId());
+        if (staff.getRole() != UserRole.STAFF || staff.isArchived()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "İşlem için aktif bir personel hesabı seçin.");
+        }
         appointment.setAssignedStaff(staff);
 
         return toResponse(

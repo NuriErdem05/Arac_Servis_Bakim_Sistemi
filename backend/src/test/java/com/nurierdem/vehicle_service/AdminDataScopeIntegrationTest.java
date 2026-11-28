@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.*;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,9 +21,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-// These test data scope and business rules; JWT/role authorization is not installed yet.
+// Data scope and business rules with a separate security-chain test.
 @EnabledIfSystemProperty(named = "test.db.url", matches = "jdbc:postgresql://127\\.0\\.0\\.1:.*")
+@Import(BusinessTestAccountScope.class)
 @SpringBootTest(properties = {
+        "APP_JWT_SECRET=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
         "spring.jpa.hibernate.ddl-auto=create-drop", "spring.jpa.open-in-view=false",
         "spring.datasource.username=backend_test", "spring.datasource.password=", "spring.sql.init.mode=never"
 })
@@ -176,7 +179,11 @@ class AdminDataScopeIntegrationTest {
     }
 
     private User saveUser(String name, String email) {
-        User user = new User(); user.setFullName(name); user.setEmail(email); return users.saveAndFlush(user);
+        User user = new User();
+        user.setFullName(name);
+        user.setEmail(email);
+        user.setRole(email.contains("staff") ? UserRole.STAFF : UserRole.USER);
+        return users.saveAndFlush(user);
     }
 
     private Vehicle saveVehicle(User user, String plate) {

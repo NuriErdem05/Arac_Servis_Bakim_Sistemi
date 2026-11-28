@@ -2,6 +2,7 @@ package com.nurierdem.vehicle_service.controller;
 
 import com.nurierdem.vehicle_service.dto.CreateServiceRecordRequest;
 import com.nurierdem.vehicle_service.dto.ServiceRecordResponse;
+import com.nurierdem.vehicle_service.security.AccountAccess;
 import com.nurierdem.vehicle_service.service.ServiceRecordService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -13,15 +14,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class ServiceRecordController {
+    private final AccountAccess access;
     private final ServiceRecordService serviceRecordService;
 
-    public ServiceRecordController(ServiceRecordService serviceRecordService) {
+    public ServiceRecordController(ServiceRecordService serviceRecordService, AccountAccess access) {
+        this.access = access;
         this.serviceRecordService = serviceRecordService;
     }
 
     @PostMapping("/service-records")
     public ResponseEntity<ServiceRecordResponse> create(
             @Valid @RequestBody CreateServiceRecordRequest request) {
+        access.requireSelf(request.performedById());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(serviceRecordService.createServiceRecord(request));
     }
@@ -48,6 +52,7 @@ public class ServiceRecordController {
     public List<ServiceRecordResponse> getOwnerHistory(
             @PathVariable("vehicleId") Long vehicleId,
             @RequestParam("ownerId") Long ownerId) {
+        access.requireSelf(ownerId);
         return serviceRecordService.getOwnerHistory(vehicleId, ownerId);
     }
 
@@ -55,6 +60,7 @@ public class ServiceRecordController {
     public List<ServiceRecordResponse> getStaffHistory(
             @PathVariable("vehicleId") Long vehicleId,
             @RequestParam("staffId") Long staffId) {
+        access.requireSelf(staffId);
         return serviceRecordService.getStaffHistory(vehicleId, staffId);
     }
 }

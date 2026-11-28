@@ -1,3 +1,5 @@
+import { expireSession, getSession } from './authSession';
+
 export class ApiError extends Error {
   constructor(message, status = 0, fieldErrors = {}) {
     super(message);
@@ -20,17 +22,21 @@ function normalizeFieldErrors(errors) {
   ]));
 }
 
-export async function apiRequest(path, { method = 'GET', body, signal } = {}) {
+export async function apiRequest(path, { method = 'GET', body, signal, authenticated = true } = {}) {
+  const token = authenticated ? getSession().token : null;
   try {
     const response = await fetch(`/api${path}`, {
       method,
       signal,
       headers: {
         Accept: 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
       },
       ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
     });
+
+    if (response.status === 401 && token) expireSession(token);
 
     const text = await response.text();
     let data = null;
@@ -47,7 +53,9 @@ export async function apiRequest(path, { method = 'GET', body, signal } = {}) {
     if (!response.ok) {
       const message = typeof data?.message === 'string'
         ? data.message
-        : `İşlem tamamlanamadı. Lütfen tekrar deneyin. (${response.status})`;
+        : response.status === 403
+          ? 'Bu işlem için yetkiniz bulunmuyor.'
+          : `İşlem tamamlanamadı. Lütfen tekrar deneyin. (${response.status})`;
       throw new ApiError(message, response.status, data?.fieldErrors);
     }
 

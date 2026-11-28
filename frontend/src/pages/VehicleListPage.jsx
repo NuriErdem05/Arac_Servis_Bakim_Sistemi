@@ -29,7 +29,7 @@ export default function VehicleListPage({ scope = 'owner' }) {
           <h1 id="page-title" tabIndex={-1}>{service ? 'Servis araçları' : 'Araçlarım'}</h1>
           <p className="page-description">{service ? 'Servis genelindeki aktif araçları ve bakım geçmişlerini görüntüleyin.' : 'Kayıtlı araçlarınızı görüntüleyin ve bilgilerini güncelleyin.'}</p>
         </div>
-        <div className="button-row"><a className="button button-secondary" href={service ? '#/vehicles' : '#/service/vehicles'}>{service ? 'Araçlarım' : 'Servis araçları'}</a>{service ? <a className="button button-primary" href="#/service-records/new"><Icon name="plus" size={18} />Servis kaydı oluştur</a> : <a className="button button-primary" href="#/vehicles/new"><Icon name="plus" size={18} />Araç ekle</a>}</div>
+        <div className="button-row">{service ? <a className="button button-primary" href="#/service-records/new"><Icon name="plus" size={18} />Servis kaydı oluştur</a> : <a className="button button-primary" href="#/vehicles/new"><Icon name="plus" size={18} />Araç ekle</a>}</div>
       </div>
       {loading || error ? <AsyncState loading={loading} error={error} retry={retry} /> : <>
         <div className="collection-toolbar">

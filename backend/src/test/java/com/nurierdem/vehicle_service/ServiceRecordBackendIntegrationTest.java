@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.*;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,7 +28,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @EnabledIfSystemProperty(named = "test.db.url", matches = "jdbc:postgresql://127\\.0\\.0\\.1:.*")
+@Import(BusinessTestAccountScope.class)
 @SpringBootTest(properties = {
+        "APP_JWT_SECRET=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
         "spring.jpa.hibernate.ddl-auto=create-drop",
         "spring.jpa.open-in-view=false",
         "spring.datasource.username=backend_test",
@@ -97,6 +100,64 @@ class ServiceRecordBackendIntegrationTest {
                 .andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(1));
         mvc.perform(get("/api/vehicles/{id}/service-records/assigned", vehicle.getId()).param("staffId", staff.getId().toString()))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(1));
+    }
+
+    @Test
+    void maintenancePlanUsesLatestMaintenanceAndRespectsVehicleScope() throws Exception {
+        LocalDate lastMaintenance = LocalDate.now().minusMonths(4);
+        service.createServiceRecordForManagement(new CreateServiceRecordRequest(
+                vehicle.getId(), null, staff.getId(), ServiceType.REPAIR,
+                lastMaintenance.plusDays(12), 47500, null, "Fren onarımı", BigDecimal.ZERO));
+        mvc.perform(get("/api/vehicles/service/{id}/maintenance-plan", vehicle.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.intervalMonths").value(12))
+                .andExpect(jsonPath("$.intervalKilometers").value(15000))
+                .andExpect(jsonPath("$.schedule").doesNotExist());
+
+        service.createServiceRecordForManagement(request(null, lastMaintenance.minusMonths(2), 42000));
+        service.createServiceRecordForManagement(request(null, lastMaintenance, 45000));
+        service.createServiceRecordForManagement(request(null, lastMaintenance, 44000));
+        mvc.perform(get("/api/vehicles/{id}/maintenance-plan", vehicle.getId())
+                        .param("ownerId", owner.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.schedule.lastMaintenanceDate").value(lastMaintenance.toString()))
+                .andExpect(jsonPath("$.schedule.lastMaintenanceMileage").value(45000))
+                .andExpect(jsonPath("$.schedule.nextMaintenanceDate").value(lastMaintenance.plusMonths(12).toString()))
+                .andExpect(jsonPath("$.schedule.nextMaintenanceMileage").value(60000))
+                .andExpect(jsonPath("$.schedule.kilometersUntilMaintenance").value(12500))
+                .andExpect(jsonPath("$.schedule.status").value("ON_TRACK"));
+        mvc.perform(get("/api/vehicles/{id}/maintenance-plan", vehicle.getId())
+                        .param("ownerId", otherOwner.getId().toString()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void maintenancePlanUpdatesAsMileageCrossesReminderAndDeadline() throws Exception {
+        service.createServiceRecordForManagement(request(null, LocalDate.now().minusDays(1), 45000));
+        String path = "/api/vehicles/service/{id}/maintenance-plan";
+        vehicle.setCurrentMileage(59000);
+        vehicles.saveAndFlush(vehicle);
+        mvc.perform(get(path, vehicle.getId()))
+                .andExpect(jsonPath("$.schedule.status").value("APPROACHING"));
+        vehicle.setCurrentMileage(60000);
+        vehicles.saveAndFlush(vehicle);
+        mvc.perform(get(path, vehicle.getId()))
+                .andExpect(jsonPath("$.schedule.status").value("DUE"))
+                .andExpect(jsonPath("$.schedule.kilometersUntilMaintenance").value(0));
+        vehicle.setCurrentMileage(60001);
+        vehicles.saveAndFlush(vehicle);
+        mvc.perform(get(path, vehicle.getId()))
+                .andExpect(jsonPath("$.schedule.status").value("OVERDUE"))
+                .andExpect(jsonPath("$.schedule.kilometersUntilMaintenance").value(-1));
+    }
+
+    @Test
+    void overdueDateTakesPriorityWhenMileageIsBelowTheThreshold() throws Exception {
+        service.createServiceRecordForManagement(request(null, LocalDate.now().minusMonths(13), 45000));
+        mvc.perform(get("/api/vehicles/service/{id}/maintenance-plan", vehicle.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.schedule.status").value("OVERDUE"))
+                .andExpect(jsonPath("$.schedule.kilometersUntilMaintenance").value(15000));
     }
 
     @Test
@@ -292,6 +353,7 @@ class ServiceRecordBackendIntegrationTest {
         User user = new User();
         user.setFullName(name);
         user.setEmail(email);
+        user.setRole(email.contains("staff") ? UserRole.STAFF : UserRole.USER);
         return users.saveAndFlush(user);
     }
 

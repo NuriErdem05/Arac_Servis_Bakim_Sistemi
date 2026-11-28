@@ -1,14 +1,15 @@
 import Icon from '../components/Icon';
 import { useResource } from '../hooks/useResource';
-import { getVehicles } from '../services/vehicleService';
+import { getServiceVehicles, getVehicles } from '../services/vehicleService';
 import { createAppointment } from '../services/appointmentService';
 import { positiveId } from '../utils/appointment';
 import PageHeading from '../components/PageHeading';
 import AsyncState from '../components/AsyncState';
 import EntryForm from '../components/EntryForm';
 
-export default function AppointmentCreatePage({ query, onSaved }) {
-  const { data: vehicles, loading, error, retry } = useResource(getVehicles);
+export default function AppointmentCreatePage({ query, onSaved, user }) {
+  const isAdmin = user.role === 'ADMIN';
+  const { data: vehicles, loading, error, retry } = useResource(isAdmin ? getServiceVehicles : getVehicles);
   function validate(values) {
     const errors = {};
     if (!vehicles.some((item) => String(item.id) === values.vehicleId)) errors.vehicleId = 'Kayıtlı bir araç seçin.';
@@ -30,6 +31,6 @@ export default function AppointmentCreatePage({ query, onSaved }) {
       { name: 'vehicleId', label: 'Araç', type: 'select', options: vehicles.map((item) => ({ value: item.id, label: `${item.plate} · ${item.brand} ${item.model}` })) },
       { name: 'appointmentDateTime', label: 'Tarih ve saat', type: 'datetime-local', step: 1800, hint: 'Saatleri 30 dakikalık dilimlerden seçin. Aynı saat için tek aktif randevu alınır.' },
       { name: 'requestDescription', label: 'Talep açıklaması', type: 'textarea', maxLength: 1000, wide: true },
-    ]}><h2>Randevu bilgileri</h2><p>Yeni randevu, personel ataması ve onay için servis listesine eklenir.</p></EntryForm> : <div className="empty-state"><h2>Önce araç ekleyin</h2><p>Randevu oluşturmak için kayıtlı bir araç gerekiyor.</p><a className="button button-primary" href="#/vehicles/new">Araç ekle</a></div>}
+    ]}><h2>Randevu bilgileri</h2><p>Yeni randevu, personel ataması ve onay için servis listesine eklenir.</p></EntryForm> : <div className="empty-state"><h2>Kayıtlı araç bulunmuyor</h2><p>Randevu oluşturmak için kayıtlı bir araç gerekiyor.</p>{!isAdmin && <a className="button button-primary" href="#/vehicles/new">Araç ekle</a>}</div>}
   </section>;
 }

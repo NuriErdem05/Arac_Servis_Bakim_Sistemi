@@ -1,22 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 function currentPath() {
-  return window.location.hash.slice(1) || '/dashboard';
+  return window.location.hash.slice(1) || '/';
 }
 
 export function parseRoute(path) {
   const [pathname, query = ''] = path.split('?');
-  const clean = pathname.replace(/\/$/, '') || '/dashboard';
+  const clean = pathname.replace(/\/$/, '') || '/';
   const base = { path, query: new URLSearchParams(query), scope: clean.startsWith('/service/vehicles') ? 'service' : 'owner' };
   const pages = {
+    '/': 'home', '/login': 'login', '/register': 'register',
+    '/password/change': 'password-change',
     '/dashboard': 'dashboard', '/admin': 'dashboard', '/overview': 'dashboard',
     '/vehicles': 'list', '/vehicles/new': 'create',
     '/appointments': 'appointments', '/appointments/new': 'appointment-create',
     '/service/vehicles': 'list',
     '/service-records': 'records', '/service-records/new': 'record-create',
     '/reports': 'reports',
+    '/accounts': 'accounts', '/accounts/new': 'account-create',
   };
-  if (pages[clean]) return { ...base, page: pages[clean] };
+  if (Object.hasOwn(pages, clean)) return { ...base, page: pages[clean] };
   const vehicle = clean.match(/^\/(?:service\/)?vehicles\/([1-9]\d*)(?:\/(edit|history))?$/);
   if (vehicle) return { ...base, page: vehicle[2] === 'edit' ? 'edit' : vehicle[2] === 'history' ? 'history' : 'detail', id: vehicle[1] };
   const appointment = clean.match(/^\/appointments\/([1-9]\d*)$/);
@@ -34,10 +37,11 @@ export function useRoute() {
     return () => window.removeEventListener('hashchange', onChange);
   }, []);
 
-  function navigate(nextPath) {
-    window.location.hash = nextPath;
+  const navigate = useCallback((nextPath, { replace = false } = {}) => {
+    if (replace) window.history.replaceState(null, '', '#' + nextPath);
+    else window.location.hash = nextPath;
     setPath(nextPath);
-  }
+  }, []);
 
   return { route: parseRoute(path), navigate };
 }

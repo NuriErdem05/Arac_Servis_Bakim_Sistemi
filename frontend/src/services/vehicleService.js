@@ -1,9 +1,10 @@
 import { apiRequest } from './apiClient';
+import { getSession } from './authSession';
 
 function getOwnerId() {
-  const ownerId = Number(import.meta.env.VITE_DEV_OWNER_ID);
+  const ownerId = getSession().user?.id;
   if (!Number.isSafeInteger(ownerId) || ownerId <= 0) {
-    throw new Error('İşlem yapılacak kullanıcı bulunamadı. Kullanıcı ayarını kontrol edin.');
+    throw new Error('Kullanıcı oturumu bulunamadı. Lütfen tekrar giriş yapın.');
   }
   return ownerId;
 }
@@ -60,4 +61,12 @@ export async function getServiceVehicle(id, signal) {
 export function updateServiceVehicle(id, vehicle) {
   vehiclePath(id);
   return apiRequest(`/vehicles/service/${Number(id)}`, { method: 'PUT', body: vehicle });
+}
+
+export function getVehicleMaintenancePlan(id, scope, signal) {
+  const path = vehiclePath(id);
+  const endpoint = scope === 'service'
+    ? `/vehicles/service/${Number(id)}/maintenance-plan`
+    : `${path}/maintenance-plan?ownerId=${getOwnerId()}`;
+  return apiRequest(endpoint, { signal });
 }

@@ -2,6 +2,7 @@ package com.nurierdem.vehicle_service.controller;
 
 import com.nurierdem.vehicle_service.dto.*;
 import com.nurierdem.vehicle_service.enums.AppointmentStatus;
+import com.nurierdem.vehicle_service.security.AccountAccess;
 import com.nurierdem.vehicle_service.service.AppointmentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -13,11 +14,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/appointments")
 public class AppointmentController {
+    private final AccountAccess access;
     private final AppointmentService appointmentService;
 
     public AppointmentController(
-            AppointmentService appointmentService
+            AppointmentService appointmentService, AccountAccess access
     ) {
+        this.access = access;
         this.appointmentService = appointmentService;
     }
 
@@ -25,6 +28,7 @@ public class AppointmentController {
     public ResponseEntity<AppointmentResponse> create(
             @Valid @RequestBody CreateAppointmentRequest request
     ) {
+        access.requireSelfOrAdmin(request.ownerId());
         AppointmentResponse response =
                 appointmentService.createAppointment(request);
 
@@ -39,6 +43,7 @@ public class AppointmentController {
             @RequestParam(value = "status", required = false)
             AppointmentStatus status
     ) {
+        access.requireSelf(ownerId);
         return appointmentService.getOwnerAppointments(
                 ownerId,
                 status
@@ -51,6 +56,7 @@ public class AppointmentController {
             @RequestParam(value = "status", required = false)
             AppointmentStatus status
     ) {
+        access.requireSelf(staffId);
         return appointmentService.getAssignedAppointments(
                 staffId,
                 status
@@ -75,6 +81,7 @@ public class AppointmentController {
             @PathVariable("id") Long id,
             @RequestParam("ownerId") Long ownerId
     ) {
+        access.requireSelf(ownerId);
         return appointmentService.getOwnerAppointment(
                 id,
                 ownerId
