@@ -22,7 +22,7 @@ export default function AdminHomePage() {
   const upcoming = active.filter((item) => new Date(item.appointmentDateTime) >= now);
   const sorted = [...({ upcoming, today, unassigned }[view])].sort((a, b) => new Date(a.appointmentDateTime) - new Date(b.appointmentDateTime));
   return <section className="page-content">
-    <PageHeading title="Genel bakış" eyebrow="Servis özeti" description="Servis genelindeki araçlar ve randevu akışı."><button className="button button-secondary" type="button" onClick={retry} disabled={loading}><Icon name="refresh" size={16} />{loading ? 'Yükleniyor…' : 'Yenile'}</button></PageHeading>
+    <PageHeading title="Genel bakış" eyebrow="Servis özeti" description="Servis genelindeki araçlar ve randevu akışı." />
     {loading || error ? <AsyncState loading={loading} error={error} retry={retry} /> : data && <>
       <dl className="overview-summary">{[['Aktif araç', data.vehicles.length, 'car'], ['Bugünkü aktif randevu', today.length, 'calendar'], ['Onay bekleyen', active.filter((item) => item.status === 'PENDING').length, 'clock'], ['Personel atanmamış', unassigned.length, 'users']].map(([label, count, icon]) => <div key={label}><dt><span>{label}</span><Icon name={icon} size={18} /></dt><dd>{count}</dd></div>)}</dl>
       <div className="quick-links quick-links-home" aria-label="Hızlı işlemler">

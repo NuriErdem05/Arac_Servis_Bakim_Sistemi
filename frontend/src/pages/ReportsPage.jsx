@@ -14,7 +14,7 @@ export default function ReportsPage() {
   const records = (data?.records || []).filter((item) => inRange(item.serviceDate));
   const appointments = (data?.appointments || []).filter((item) => inRange(item.appointmentDateTime.slice(0, 10)));
   const totalCents = records.reduce((sum, item) => sum + toCents(item.cost), 0);
-  return <section className="page-content"><PageHeading eyebrow="Dönem özeti" title="Servis özetleri" description="Seçili dönemdeki randevular, tamamlanan işlemler ve maliyetler."><button className="button button-secondary" type="button" onClick={retry} disabled={loading}>Yenile</button></PageHeading>
+  return <section className="page-content"><PageHeading eyebrow="Dönem özeti" title="Servis özetleri" description="Seçili dönemdeki randevular, tamamlanan işlemler ve maliyetler." />
     <div className="collection-toolbar toolbar-two"><div className="filter-control"><label htmlFor="report-start">Başlangıç tarihi</label><input id="report-start" type="date" value={start} onChange={(event) => setStart(event.target.value)} /></div><div className="filter-control"><label htmlFor="report-end">Bitiş tarihi</label><input id="report-end" type="date" value={end} onChange={(event) => setEnd(event.target.value)} /></div></div>
     {!valid && <p className="form-error" role="alert">Geçerli bir tarih aralığı seçin. Bitiş tarihi başlangıçtan önce olamaz.</p>}
     {loading || error ? <AsyncState loading={loading} error={error} retry={retry} /> : valid && <>
